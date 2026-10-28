@@ -1,0 +1,122 @@
+#==========================================================
+#
+#
+#   ███████╗██╗  ██╗██╗  ██╗██╗  ██╗██████╗ 
+#   ██╔════╝╚██╗██╔╝██║  ██║██║ ██╔╝██╔══██╗
+#   ███████╗ ╚███╔╝ ███████║█████╔╝ ██║  ██║
+#   ╚════██║ ██╔██╗ ██╔══██║██╔═██╗ ██║  ██║
+#   ███████║██╔╝ ██╗██║  ██║██║  ██╗██████╔╝
+#   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ 
+#
+#
+#==========================================================
+
+# Reload SXHKD
+super + Escape
+	$(pkill --signal USR1 -x sxhkd; notify-send "SXHKD" "Reloaded")
+	# $(killall sxhkd --signal USR1; notify-send "SXHKD" "Reloaded")
+
+# Safe exit
+super + shift + E
+	"$FDE/custom/safe_exit"
+
+#Suspend
+super + shift + q
+	xterm -e "figlet '       HIBERNATE'; sudo loginctl hibernate"
+	# xterm -e "figlet '       HIBERNATE'; sudo systemctl hibernate"  >>>SYSTEMD
+
+# Screen Lock
+alt + ctrl + q
+    loginctl lock-session
+	# "$FDE/custom/lock"
+
+# SCREENSHOT
+Print
+#alt + shift + S
+	$(ffmpeg -loglevel 0 -f x11grab -video_size 1920x1080 -i $DISPLAY -vframes 1 "$HOME/screenshots/$(date +%Y-%m-%d_%H:%M:%S_IST).png" )
+
+# CLIPBOARD
+# Clipboard history
+super + v
+	rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
+
+# Make swap Primary & Secondary Clipboard Content
+alt + c
+	$(xsel -x; xsel -k)
+
+# User Camera to read QR
+alt + shift + c
+	"$FDE/custom/QR.py"
+
+#VOLUME CONTROL
+XF86AudioRaiseVolume
+#ctrl + alt + l
+	$(wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+  && MSG=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -b 9-); notify-send -t 1000 -h string:x-dunst-stack-tag:vol -i /usr/share/icons/Adwaita/48x48/legacy/audio-volume-high.png "VOLUME" "$MSG" )
+XF86AudioLowerVolume
+#ctrl + alt + h
+	$(wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-  && MSG=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -b 9-); notify-send -t 1000 -h string:x-dunst-stack-tag:vol -i /usr/share/icons/Adwaita/48x48/legacy/audio-volume-low.png  "VOLUME" "$MSG" )
+XF86AudioMute
+#ctrl + alt + m
+	$(wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && MSG=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -b 9-); notify-send -t 1000 -h string:x-dunst-stack-tag:vol -i /usr/share/icons/Adwaita/48x48/legacy/audio-volume-muted.png "VOLUME" "$MSG")
+
+#BRIGHTNESS CONTROL
+XF86MonBrightnessUp
+#ctrl + alt + k
+	$(brightnessctl s 10%+ | sed -n 's/.*(\(.*\)).*/\1/p' | xargs notify-send -t 1000 -h string:x-dunst-stack-tag:bri -i /usr/share/icons/breeze-dark/actions/22/brightness-high.svg "BRIGHTNESS" )
+XF86MonBrightnessDown
+#ctrl + alt + j
+	$(brightnessctl s 10%- | sed -n 's/.*(\(.*\)).*/\1/p' | xargs notify-send -t 1000 -h string:x-dunst-stack-tag:bri -i /usr/share/icons/breeze-dark/actions/22/brightness-low.svg "BRIGHTNESS" )
+
+#MEDIA CONTROL
+XF86AudioPlay
+#ctrl + alt + p
+	$(playerctl play-pause; sleep 0.05; notify-send -t 1000 -h string:x-dunst-stack-tag:pla -i /usr/share/icons/Adwaita/symbolic/actions/media-playback-start-symbolic.svg "MEDIA" "$(playerctl status)")
+
+#Quick Access
+super + r
+	rofi -show drun
+#	krunner
+
+# Application
+super + shift + r
+	rofi -show combi
+
+# Once-shot commands
+super + ctrl + r
+	"$FDE"/custom/run_non_interactive
+
+#Terminal Emulator #Terminal & Browser
+super + t
+	mpv --no-config --really-quiet "$ASSETS"/terminal.mp3 & \
+	kitty
+
+#Browser #Terminal & Browser
+super + B
+	mpv --no-config --really-quiet "$ASSETS"/browser.mp3 & \
+	librewolf
+
+#WINDOW MANAGEMENT
+super + x; {a,s,f,h,l,p,b,x}
+	"$FDE/custom/layout" --{auto,stack,focus,half,large,pass --gen,browser,help}
+
+super + f
+	"$FDE/custom/layout" --focus 0
+
+super + s
+	"$FDE/custom/layout" --smart
+
+super + ctrl + {h,y,k,u,l,n,j,b}
+	"$FDE/custom/layout" --shift --{left,lefttop,top,topright,right,rightbottom,bottom,bottomleft}
+
+super + ctrl + m
+	"$FDE/custom/layout" --large
+
+super + KP_Begin
+	"$FDE/custom/layout" --large
+
+super + KP_{Left,Home,Up,Prior,Right,Next,Down,End}
+	"$FDE/custom/layout" --shift --{left,lefttop,top,topright,right,rightbottom,bottom,bottomleft}
+
+alt + q
+	xdotool getwindowfocus windowclose
+

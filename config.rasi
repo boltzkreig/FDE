@@ -1,0 +1,165 @@
+
+/*=========================================================
+#
+#
+#   ██████╗  ██████╗ ███████╗██╗
+#   ██╔══██╗██╔═══██╗██╔════╝██║
+#   ██████╔╝██║   ██║█████╗  ██║
+#   ██╔══██╗██║   ██║██╔══╝  ██║
+#   ██║  ██║╚██████╔╝██║     ██║
+#   ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝
+#
+#
+#========================================================*/
+
+configuration {
+    combi-modi               : "window,ssh,filebrowser";
+    cycle                    : true;
+    display-drun             : "Applications: " ;
+    display-keys             : " KEYS: " ;
+    display-ssh              : " Session: " ;
+    drun-url-launcher        : "brave-browser --incognito";
+    font                     : "mono 15";
+    icon-theme               : "candy-icon" ;
+    kb-cancel                : "Escape,Control+g,Control+bracketleft";
+    modi                     : "window,run,ssh,drun,filebrowser,combi";
+    show-icons               : true;
+    sidebar-mode             : false;
+    ssh-client               : "ssh";
+    ssh-command              : "{terminal} -e {ssh-client} {host} [-p {port}]";
+    window-thumbnail         : false;
+    xoffset                  : 10;
+    yoffset                  : 10;
+    timeout {
+        action               : "kb-cancel";
+        delay                :  0;
+    }
+
+    filebrowser {
+        directories-first    : true;
+        sorting-method       : "name";
+    }
+}
+
+* {
+    text-color               :      # ffeedd;
+    background-color         :      # 000000;
+    dark                     :      # 1c1c1c;
+    black                    :      # 3d352a;
+    lightblack               :      # 554444;
+    red                      :      # cd5c5c;
+    lightred                 :      # cc5533;
+    green                    :      # 86af80;
+    lightgreen               :      # 88cc22;
+    yellow                   :      # e8ae5b;
+    lightyellow              :      # ffa75d;
+    blue                     :      # 6495ed;
+    lightblue                :      # 87ceeb;
+    magenta                  :      # deb887;
+    lightmagenta             :      # 996600;
+    cyan                     :      # b0c4de;
+    lightcyan                :      # b0c4de;
+    white                    :      # bbaa99;
+    lightwhite               :      # ddccbb;
+    highlight                : bold # ffffff;
+    ultramarine              :      # 110022;
+}
+
+window {
+    height                   : 67%;
+    width                    : 33%;
+    location                 : west;
+    anchor                   : west;
+    border                   : 30px 30px 30px 30px;
+    text-color               : @lightwhite;
+    element-icon-size        : @white;
+}
+
+mode-switcher {
+    border                   : 2px 0px 0px 0px;
+    background-color         : @lightblack;
+    padding                  : 4px;
+}
+
+button selected {
+    border-color             : @lightblue;
+    text-color               : @lightgreen;
+}
+
+inputbar {
+    background-color         : #000011;
+    padding                  : 4px;
+    border                   : 10px 10px 10px 10px;
+}
+
+entry, prompt {
+    text-color               : #ffffee;
+}
+
+mainbox {
+    expand                   : true;
+    background-color         : #221133;
+    spacing                  : 1em;
+}
+
+listview {
+    padding                  : 0em 0.4em 0em 1em;
+    dynamic                  : true;
+    lines                    : 0;
+}
+
+element-text {
+    background-color         : inherit;
+    text-color               :       inherit;
+}
+
+element selected  normal {
+    background-color         : #000000;
+    text-color               : @highlight;
+}
+
+element normal  normal {
+    background-color         : @ultramarine;
+    text-color               : @lightwhite;
+}
+
+element alternate normal {
+    background-color         :@ultramarine;
+    text-color               :@lightwhite;
+}
+
+
+element normal active {
+    text-color               : @white;
+}
+
+element normal urgent {
+    text-color               : @lightred;
+}
+
+element alternate active {
+    text-color               : @lightblue;
+    background-color         : grey;
+}
+
+element alternate urgent {
+    text-color               : @lightred;
+}
+
+element selected active {
+    background-color         : @lightwhite;
+    text-color               : @dark;
+}
+
+element selected urgent {
+    background-color         : @lightred;
+    text-color               : @dark;
+}
+
+error-message {
+    expand                   : true;
+    background-color         : red;
+    border-color             : darkred;
+    border                   : 2px;
+    padding                  : 1em;
+}

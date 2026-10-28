@@ -1,0 +1,120 @@
+# VISUAL FEATURES
+borderwidth   3
+fontname      "mono:pixelsize=18:style-semicondensed"
+color   inactiveborder   "#222222"
+color   activeborder     "#ffffff"
+color   ungroupborder    "#ff00ff"
+color   groupborder      "#00ff00"
+color   font             "#ffffff"
+color   selfont          "#000000"
+color   menufg           "#ffffff"
+color   menubg           "#221133"
+
+#APPLICATION MENU #Terminal & Browser
+command   browser     librewolf
+command   terminal    "kitty"
+command   files       "kitty -e ranger"
+command   CPU         "kitty -e htop"
+command   GPU         "kitty -e nvtop"
+command   NET         "kitty -e sudo iftop -i wlp0s20f3"
+
+#IGNORE
+ignore    dunst
+ignore    Polybar
+ignore    rofi
+
+# DEFAULT GROUPS #Terminal & Browser
+#terminal
+autogroup 1 "kitty"
+autogroup 1 "ghostty"
+autogroup 1 "emacs"
+
+#browser
+autogroup 2 "qutebrowser"
+autogroup 2 "librewolf"
+
+#extra
+autogroup 3 "mpv"
+
+autogroup 4 "xterm"
+autogroup 4 "KeePassXC"
+
+# KEYBOARD & MOUSE
+#unbind-key all
+#unbind-mouse all
+
+# BASICS
+unbind-key       all
+unbind-key       M-Left
+unbind-key       M-Right
+bind-key CMS-r   restart
+
+# GROUPING SIMPLIFIED
+##################################
+# `Super + key` to use general accessibilities (vtile means master-layout for same window class)
+bind-key   4-a        group-toggle-all
+vtile      75
+bind-key   4-m        window-vtile
+bind-key   4-grave    window-cycle
+bind-key   4S-grave   window-rcycle
+# `Super + Ctrl + Group` to SHOW/HIDE (keep everything as it is)
+bind-key   4C-1       group-toggle-1
+bind-key   4C-2       group-toggle-2
+bind-key   4C-3       group-toggle-3
+bind-key   4C-4       group-toggle-4
+bind-key   4C-5       group-toggle-5
+bind-key   4C-6       group-toggle-6
+bind-key   4C-7       group-toggle-7
+bind-key   4C-8       group-toggle-8
+bind-key   4C-9       group-toggle-9
+bind-key   4C-0       group-toggle-0
+#################################
+# `Super + Group` to only SHOW this group
+bind-key   4-1        group-only-1
+bind-key   4-2        group-only-2
+bind-key   4-3        group-only-3
+bind-key   4-4        group-only-4
+bind-key   4-5        group-only-5
+bind-key   4-6        group-only-6
+bind-key   4-7        group-only-7
+bind-key   4-8        group-only-8
+bind-key   4-9        group-only-9
+bind-key   4-0        group-only-0
+##################################
+# `Super + Shift + Group` to MOVE to this window
+bind-key   4S-1       window-movetogroup-1
+bind-key   4S-2       window-movetogroup-2
+bind-key   4S-3       window-movetogroup-3
+bind-key   4S-4       window-movetogroup-4
+bind-key   4S-5       window-movetogroup-5
+bind-key   4S-6       window-movetogroup-6
+bind-key   4S-7       window-movetogroup-7
+bind-key   4S-8       window-movetogroup-8
+bind-key   4S-9       window-movetogroup-9
+bind-key   4S-0       window-stick
+
+# MORE INTUITIVE MOUSE 
+#unbind-mouse all
+bind-mouse   4-1        window-group
+bind-mouse   M-1        window-move
+bind-mouse   M-2        window-lower
+bind-mouse   M-3        window-resize
+
+bind-key     4-Left     window-snap-left
+bind-key     4S-Left    window-snap-up-left
+bind-key     4-Up       window-snap-up
+bind-key     4S-Up      window-snap-up-right
+bind-key     4-Right    window-snap-right
+bind-key     4S-Right   window-snap-down-right
+bind-key     4-Down     window-snap-down
+bind-key     4S-Down    window-snap-down-left
+
+bind-key     4-h        window-move-left-big
+bind-key     4-j        window-move-down-big
+bind-key     4-k        window-move-up-big
+bind-key     4-l        window-move-right-big
+
+bind-key     4S-h       window-resize-left-big
+bind-key     4S-j       window-resize-down-big
+bind-key     4S-k       window-resize-up-big
+bind-key     4S-l       window-resize-right-big

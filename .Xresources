@@ -1,0 +1,30 @@
+xterm*faceName: "Noto Sans Mono"
+xterm*faceSize: 15
+xterm*antialias: false
+xterm*termName: xterm-color
+xterm*background: black
+xterm*foreground: white
+
+xterm*dynamiccolors: true
+xterm*utf8: 1
+xterm*highlightSelection: true
+xterm*saveLines: 4096
+xterm*trimSelection: true
+
+xterm*scrollBar: true
+xterm*rightScrollBar: true
+XTerm*thickness:8
+XTerm.Scrollbar.background:#000000
+XTerm.Scrollbar.foreground:#333333
+
+XTerm*pointerColor: white
+
+XTerm*pointerColorBackground: black
+XTerm*cursorColor: yellow
+XTerm*cursorBlink: true
+XTerm*selectToClipboard: true
+
+XTerm*printerCommand: xterm -T History -e sh -c 'less -r <&3' 3<&0
+
+Xcursor.size: 32
+Xft.dpi: 108
