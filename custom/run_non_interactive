@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+################################################################################
+# A script to immitate `run` in window (ctrl+R) but more powerful
+# As bash aliases don't get interpreted so it was hacked
+# other commands work just fine
+#
+# A command is obtained from `rofi` and checked if empty then exited
+# else checked for the pattern "alias ALIAS=" to make sure no false positive 
+# creep in; if so the command is extracted and operated to approximate alias
+# expansion;then sent to `xterm` for execution and wait for 3s after completion
+################################################################################
+
+# source $HOME/.zshrc
+preface=""
+command="$(rofi -dmenu -p "COMMAND:")"
+pause=" ; sleep 1; echo -n 1... ; sleep 1; echo -n 2..; sleep 1;"
+
+if [ -z "$command" ]
+then
+	exit 0
+fi
+
+presence=$(grep "alias $command=" $HOME/.zshrc )
+
+if [ -n "$presence" ]
+then
+	command=$(echo "$presence" | awk 'BEGIN{ FS ="\47"}; {print $2}')
+fi
+
+xterm -font "terminus-pt154-bold-20" -geometry 45x35+10+180 -e "$preface$command$pause"

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# This is a largely redundant script that tries to close all the daemons
+# started with xserver.
+
+set -e
+mpv --no-config --really-quiet "$ASSETS"/winxpshutdown.mp3 &
+sleep 1.75
+killall polybar
+killall sxhkd
+killall picom
+killall check_battery
+
+pgrep Xorg && killall Xorg || notify-send -t 1000 -i /usr/share/icons/Adwaita/48x48/legacy/dialog-warning.png "EXIT FAILED" "current WM is NOT the WM set in 'safe_exit'"
+killall dunst

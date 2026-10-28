@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+location="XYZ"
+
+output=$(curl -s --compressed wttr.in/"$location"?format="%c+%t+%w+%m\n" || echo "%{F#483D8B} %{F-}")
+
+echo $output | sed \
+ -e 's/↖/%{F#50C878}%{F-} /g' \
+ -e 's/↗/%{F#50C878}%{F-} /g' \
+ -e 's/↘/%{F#50C878}%{F-} /g' \
+ -e 's/↙/%{F#50C878}%{F-} /g' \
+ -e 's/↑/%{F#50C878}%{F-} /g' \
+ -e 's/↓/%{F#50C878}%{F-} /g' \
+ -e 's/←/%{F#50C878}%{F-} /g' \
+ -e 's/→/%{F#50C878}%{F-} /g' \
+ -e 's/+//g' \
+ -e 's/°C/℃/g' \
+ -e 's/^\(.\{40\}\).*/\1/'

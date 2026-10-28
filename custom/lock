@@ -1,0 +1,53 @@
+#!/bin/sh
+
+################################################################################
+# A screenlock-utility script which can lock using both i3lock and xtrlock
+# with following behavious:
+# 1) if the device is charging set cmatrix as savescreen
+# 2) if any window covers more than 50% of screen show static image for privacy
+# 3) in othercases just take a screenshot, blur for visual spectacle
+# NOTE: Charging mode is effective only on floating window-manager
+################################################################################
+
+set -x
+
+if [ -n "$1" ]; then
+    echo "$1"
+    # trap 'brightnessctl -r
+    # exit 0' HUP TERM INT
+    # brightnessctl -s
+    # brightnessctl s 0
+    # sleep 10 & wait
+else
+    AC=$(upower -i "$(upower -e | grep "line")" | grep "online" | grep yes | wc -l )
+    size="$(xdotool search --onlyvisible --class [^conky] getwindowgeometry --shell %@ | grep "HEIGHT\|WIDTH" | \
+        awk -F'=' -v FINAL=0 -v sum=0 '{ (NR%2)?sum=$2 : sum=sum*$2; if(sum>FINAL) FINAL=sum; } END{print FINAL}' )"
+
+    if [ "$AC" -eq 0 ]; then
+        #xterm -maximized -e "cmatrix -bs -u 9" &
+        #xtrlock
+        #pkill cmatrix
+        # (sleep 1 && systemctl suspend) &
+        (sleep 1 && loginctl suspend) &
+    fi
+    #elif [ "$size" -eq 0 ] || [ "$size" -gt 1036800 ]; then
+    if [ "$size" -eq 0 ] || [ "$size" -gt 1036800 ]; then
+        mpv --no-config --really-quiet "$ASSETS"/lock.mp3 &
+        if [ $(( $(date +%S) % 2 )) -eq 0 ]; then
+            i3lock -n -i "$ASSETS"/0253.png -f -e -b
+        else
+            i3lock -n -i "$ASSETS"/xfce-shapes.png -f -e -b
+        fi
+    else
+    #import -window root /tmp/screenshot.png
+        ffmpeg -loglevel panic -f x11grab -video_size 1920x1080 -i "$DISPLAY" -vframes 1 "$ASSETS"/screenshot.png -y
+        sleep 0.5 && mpv --no-config --really-quiet "$ASSETS"/lock.mp3 &
+        #FAST
+        # magick "$ASSETS"/screenshot.png -scale 10% -scale 1000% "$ASSETS"/tux.png -gravity center -composite "$ASSETS"/screenshotf.png
+        #PRETTY
+        magick "$ASSETS"/screenshot.png -blur 20x8 "$ASSETS"/tux.png -gravity center -composite -alpha Set "$ASSETS"/screenshotf.png
+        i3lock -n -i "$ASSETS"/screenshotf.png -f -e -b
+    fi
+    # sleep 5
+    # loginctl suspend
+fi

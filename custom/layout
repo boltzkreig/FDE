@@ -1,0 +1,200 @@
+#!/bin/sh
+
+################################################################################
+# A simple script to imitate tile-on-demand for floating window-managers.
+# It is designed for a standard 1920x1080 single monitor and can be made dynamic 
+# by substituting the commented text in the beginning
+#
+# It has some sensible options baked it which can be changed as per requirement
+# NOTE: `Polybar`, `Dunst` and `Conky` are exempted from rearrangement
+# Some apps put a window outside viewport for IPC. It will bring them into viewport
+################################################################################
+
+# set -x
+arg0=$0;  arg1=$1;   arg2=$2;
+
+gap=25;				width=450;				height=126
+display_x=1920
+display_y=$((1080-40))
+
+## Automatic screen resolution detection
+#set -- $(xdotool getdisplaygeometry)
+#display_x=$1
+#display_x=$(( $2 - 40 ))
+
+#Terminal & Browser
+term="kitty|ghostty"
+brow="qutebrowser|librewolf"
+passwdmgr="keepassxc"
+
+case $arg1 in
+    --auto)
+        win_list=$(xdotool search --onlyvisible --maxdepth 1 --classname ^[^Pd].+ getwindowgeometry %@ | sed -z 's/\n / /g' | awk '{if (match($4,"-") == 0) print $2}')
+        set -- $win_list
+
+        if [ $# -lt 2 ]; then
+            $($arg0 --large)
+        elif [ $# -lt 3 ]; then
+            width=$(( (display_x - 3*gap)/2 )) ; height=$(( display_y - 2*gap ))
+            xdotool windowsize $1 $width $height windowraise $1 windowmove $1 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+            xdotool windowsize $2 $width $height windowraise $2 windowmove $2 $(( width + 2*gap )) $(( 1*gap )) 2> /dev/null
+        elif [ $# -lt 5 ]; then
+            width=$(( (display_x - 3*gap)/2 )) ; height=$(( (display_y - 3*gap)/2 ))
+            xdotool windowsize $1 $width $height windowraise $1 windowmove $1 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+            xdotool windowsize $2 $width $height windowraise $2 windowmove $2 $(( width + 2*gap )) $(( 1*gap )) 2> /dev/null
+            xdotool windowsize $3 $width $height windowraise $3 windowmove $3 $(( 1*gap )) $(( height + 2*gap )) 2> /dev/null
+            xdotool windowsize $4 $width $height windowraise $4 windowmove $4 $(( width + 2*gap )) $(( height + 2*gap )) 2> /dev/null
+        elif [ $# -lt 7 ]; then
+            width=$(( (display_x - 4*gap)/3 )) ; height=$(( (display_y - 3*gap)/2 ))
+            xdotool windowsize $1 $width $height windowraise $1 windowmove $1 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+            xdotool windowsize $2 $width $height windowraise $2 windowmove $2 $(( width + 2*gap )) $(( 1*gap )) 2> /dev/null
+            xdotool windowsize $3 $width $height windowraise $3 windowmove $3 $(( 2*width + 3*gap )) $(( 1*gap )) 2> /dev/null
+            xdotool windowsize $4 $width $height windowraise $4 windowmove $4 $(( 1*gap )) $(( height + 2*gap )) 2> /dev/null
+            xdotool windowsize $5 $width $height windowraise $5 windowmove $5 $(( 2*width + 3*gap )) $(( height + 2*gap )) 2> /dev/null
+            xdotool windowsize $6 $width $height windowraise $6 windowmove $6 $(( width + 2*gap )) $(( height + 2*gap )) 2> /dev/null
+        else
+            width=$(( (display_x - 4*gap)/3 )) ; height=$(( (display_y - 4*gap)/3 ))
+            xdotool windowsize $1 $width $height windowraise $1 windowmove $1 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+            xdotool windowsize $2 $width $height windowraise $2 windowmove $2 $(( width + 2*gap )) $(( 1*gap )) 2> /dev/null
+            xdotool windowsize $3 $width $height windowraise $3 windowmove $3 $(( 2*width + 3*gap )) $(( 1*gap )) 2> /dev/null
+            xdotool windowsize $4 $width $height windowraise $4 windowmove $4 $(( 1*gap )) $(( height+2*gap )) 2> /dev/null
+            xdotool windowsize $5 $width $height windowraise $5 windowmove $5 $(( width + 2*gap )) $(( height+2*gap )) 2> /dev/null
+            xdotool windowsize $6 $width $height windowraise $6 windowmove $6 $(( 2*width + 3*gap )) $(( height+2*gap )) 2> /dev/null
+            xdotool windowsize $7 $width $height windowraise $7 windowmove $7 $(( width + 2*gap )) $(( 2*height + 3*gap )) 2> /dev/null
+            xdotool windowsize $8 $width $height windowraise $8 windowmove $8 $(( 1*gap )) $(( 2*height + 3*gap )) 2> /dev/null
+            xdotool windowsize $9 $width $height windowraise $9 windowmove $9 $(( 2*width + 3*gap )) $(( 2*height + 3*gap )) 2> /dev/null
+        fi
+        ;;
+
+    --stack)
+        win_list=$(xdotool search --onlyvisible --maxdepth 1 --classname ^[^Pd].+ getwindowgeometry %@ | sed -z 's/\n / /g' | awk '{if (match($4,"-") == 0) print $2}')
+        set -- $win_list
+
+        width=$((display_x-(2*gap))) ; height=$((display_y-(2*gap)))
+        xdotool windowsize $1 $width $height windowraise $1 windowmove $1 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+        xdotool windowsize $2 $width $height windowraise $2 windowmove $2 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+        xdotool windowsize $3 $width $height windowraise $3 windowmove $3 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+        xdotool windowsize $4 $width $height windowraise $4 windowmove $4 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+        xdotool windowsize $5 $width $height windowraise $5 windowmove $5 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+        xdotool windowsize $6 $width $height windowraise $6 windowmove $6 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+        xdotool windowsize $7 $width $height windowraise $7 windowmove $7 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+        xdotool windowsize $8 $width $height windowraise $8 windowmove $8 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+        xdotool windowsize $9 $width $height windowraise $9 windowmove $9 $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+
+        xdotool getactivewindow windowsize $((display_x-(2*gap))) $((display_y-(2*gap))) windowmove $(( 1*gap )) $(( 1*gap )) 2> /dev/null
+        ;;
+
+
+    --focus)
+        xdotool search --onlyvisible --classname ^[^PD].* windowsize %@ $((width-gap)) $((height-gap)) \
+            windowmove %1 $((display_x-width)) $((gap)) \
+            windowmove %2 $((display_x-width)) $((height*1+gap)) \
+            windowmove %3 $((display_x-width)) $((height*2+gap)) \
+            windowmove %4 $((display_x-width)) $((height*3+gap)) \
+            windowmove %5 $((display_x-width)) $((height*4+gap)) \
+            windowmove %6 $((display_x-width)) $((height*5+gap)) \
+            windowmove %7 $((display_x-width)) $((height*6+gap)) \
+            windowmove %8 $((display_x-width)) $((height*7+gap)) \
+            windowmove %9 $((display_x-width)) $((height*8+gap))
+        if [ -z $arg2 ]; then
+            notify-send -t 950 "XDOTOOL" "Select Primary Window"
+            xdotool selectwindow windowsize $((display_x-(2*gap)-width)) $((display_y-(2*gap))) windowmove $gap $gap
+        else
+            xdotool getactivewindow windowsize $((display_x-(2*gap)-width)) $((display_y-(2*gap))) windowmove $gap $gap
+        fi
+        ;;
+    --large)
+        xdotool getwindowfocus windowsize $((display_x-(2*gap) )) $((display_y-(2*gap) )) windowmove $(( 1*gap )) $(( 1*gap )) windowraise
+        ;;
+
+    --shift)
+        case $arg2 in
+            --left)
+                window_size_x=$(((display_x-(3*gap))/2)) ; window_size_y=$((display_y-(2*gap)))
+                window_x=$gap                            ; window_y=$gap
+                ;;
+            --lefttop)
+                window_size_x=$(((display_x-(3*gap))/2)) ; window_size_y=$(((display_y-(3*gap))/2))
+                window_x=$gap                            ; window_y=$gap
+                ;;
+            --top)
+                window_size_x=$((display_x-(2*gap)))     ; window_size_y=$(((display_y-(3*gap))/2))
+                window_x=$gap                            ; window_y=$gap
+                ;;
+            --topright)
+                window_size_x=$(((display_x-(3*gap))/2)) ; window_size_y=$(((display_y-(3*gap))/2))
+                window_x=$(((display_x/2)+(gap/2)))      ; window_y=$gap
+                ;;
+            --right)
+                window_size_x=$(((display_x-(3*gap))/2)) ; window_size_y=$((display_y-(2*gap)))
+                window_x=$(((display_x/2)+(gap/2)))      ; window_y=$gap
+                ;;
+            --rightbottom)
+                window_size_x=$(((display_x-(3*gap))/2)) ; window_size_y=$(((display_y-(3*gap))/2))
+                window_x=$(((display_x/2)+(gap/2)))      ; window_y=$(((display_y/2)+(gap/2)))
+                ;;
+            --bottom)
+                window_size_x=$((display_x-(2*gap)))     ; window_size_y=$(((display_y-(3*gap))/2))
+                window_x=$gap                            ; window_y=$(((display_y/2)+(gap/2)))
+                ;;
+            --bottomleft)
+                window_size_x=$(((display_x-(3*gap))/2)) ; window_size_y=$(((display_y-(3*gap))/2))
+                window_x=$gap                            ; window_y=$(((display_y/2)+(gap/2)))
+                ;;
+            *)
+                echo "INVALID POSITION"
+                ;;
+        esac
+        xdotool getwindowfocus windowsize $window_size_x $window_size_y windowmove $window_x $window_y windowraise
+        ;;
+
+    --browser)
+        xdotool search --onlyvisible --class $term windowsize 800 120 windowmove 560 5 windowraise
+        xdotool search --onlyvisible --class $brow windowsize 1900 990 windowmove 10 75 windowraise
+        ;;
+
+    --half)
+        xdotool search --onlyvisible -class $term windowsize 935 1000 windowmove 15 25 windowraise
+        xdotool search --onlyvisible -class $brow windowsize 935 1000 windowmove 965 25 windowraise
+        ;;
+
+    --pass)
+        [ $arg2 = "--gen" ] && $passwdmgr &
+        xdotool search --sync --onlyvisible -class $passwdmgr windowsize 550 990 windowmove 10 75 windowraise
+        xdotool search --onlyvisible -class $term windowsize 800 120 windowmove 560 5 windowraise
+        xdotool search --sync --onlyvisible -class $brow windowsize 1300 990 windowmove 575 75 windowraise
+        if [ $arg2 = "--gen" ]; then
+            xdotool mousemove --sync 200 680 click --repeat 2 1
+        fi
+        ;;
+
+    --collage)
+        xdotool search --onlyvisible --class $brow windowmove 10 10 windowsize 1090 350 windowraise
+        xdotool search --onlyvisible --class mpv windowmove 1115 110 windowsize 450 250 windowraise
+        xdotool search --onlyvisible --class netflix.com windowmove 1125 10 windowsize 775 350 windowraise
+        xdotool search --onlyvisible --class xterm windowmove 1115 10 windowsize 800 80 windowraise
+        xdotool search --onlyvisible --class Wireshark windowmove 1580 110 windowsize 340 920 windowraise
+        xdotool search --onlyvisible --class $term windowmove 10 380 windowsize 1555 650 windowraise
+        ;;
+
+    --smart)
+        brow_height="$(xdotool search --onlyvisible --class $brow getwindowgeometry --shell %@ | sed -En 's/^HEIGHT=([0-9]*)/\1/p' | sed '1q')"
+        xdotool search --onlyvisible --class mpv windowmove 1450 10 windowsize 450 450 windowraise --sync
+        if [ -z "$brow_height" ]; then
+            xdotool search --limit 1 --onlyvisible --class $term windowmove 10 10 windowsize 1420 1025 windowraise --sync
+        elif [ "$brow_height" -gt 600 ]; then
+            xdotool search --limit 1 --onlyvisible --class $brow windowmove 10 10 windowsize 1420 450 windowraise --sync
+            xdotool search --limit 1 --onlyvisible --class $term windowmove 10 480 windowsize 1890 550 windowraise --sync
+        else
+            xdotool search --limit 1 --onlyvisible --class $term windowmove 1450 480 windowsize 450 550 windowraise --sync
+            xdotool search --limit 1 --onlyvisible --class $brow windowmove 10 10 windowsize 1420 1025 windowraise --sync
+        fi
+        ;;
+
+    *)
+        help=$()
+        grep -E "^\s{4}--\S+)" $arg0 | sed -e "s/    --//g" -e "s/)//g" | sed -E 's/\b([a-z])/\u\1/g'
+        notify-send "LAYOUT" "$(grep -E "^\s{4}--\S+)" $arg0 | sed -e "s/    --//g" -e "s/)//g" | sed -E 's/\b([a-z])/\u\1/g')"
+        ;;
+
+    esac
