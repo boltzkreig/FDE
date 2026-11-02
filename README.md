@@ -1,5 +1,7 @@
 # Faux Desktop Emulation
 
+A cwm + X11 session — one screen, one config, twenty years of hardware.
+
 ## Contents
 
 - [What this is](#what-this-is)
@@ -60,7 +62,7 @@ Packages needed for the session, the C organs and the optional extras are listed
 ## Install
 
 ```sh
-git clone https://github.com/boltzkreig/FDE && cd FDE
+git clone https://github.com/boltzkreig/FDE && cd FDE && chmod +x init.sh FDE.sh
 ./init.sh     # audits dependencies and names what's missing; then, after a
               # typed "yes" for each step, builds the C organs, creates a
               # Python venv and downloads media assets — all inside the repo

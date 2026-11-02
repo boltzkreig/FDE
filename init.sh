@@ -62,7 +62,7 @@ done
 read -p "The C programmes will be built. Type '[31myes[0m' exactly to continue..." reply
 if [ "$reply" = "yes" ]; then
 
-    if ( cd custom && mkdir -p builds && make -k && cd ..); then
+    if ( cd custom && mkdir -p builds && make -k; cd ..); then
         rm -rf builds
         mv custom/builds .
     else
