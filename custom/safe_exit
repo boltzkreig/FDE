@@ -3,7 +3,7 @@
 # This is a largely redundant script that tries to close all the daemons
 # started with xserver.
 
-set -e
+set -x
 mpv --no-config --really-quiet "$ASSETS"/winxpshutdown.mp3 &
 sleep 1.75
 killall polybar
