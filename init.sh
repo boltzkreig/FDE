@@ -3,6 +3,7 @@
 
 if [ -e FDE.sh.bak ]; then cp FDE.sh.bak FDE.sh; fi
 sed -i.bak "s|PLACEHOLDER|$(pwd)|g" FDE.sh
+grep -l "#!" custom/* | xargs chmod +x
 
 echo "This script only check which scripts are installed. It will show the binary or version is properly installed."
 echo "Then it will install python dependencies [CHAPTER 4], build the C code [CHAPTER 2] & download assets [CHAPTER 6]"
@@ -61,7 +62,7 @@ done
 read -p "The C programmes will be built. Type '[31myes[0m' exactly to continue..." reply
 if [ "$reply" = "yes" ]; then
 
-    if ( cd custom && mkdir -p builds && make && cd ..); then
+    if ( cd custom && mkdir -p builds && make -k && cd ..); then
         rm -rf builds
         mv custom/builds .
     else
@@ -71,7 +72,7 @@ fi
 
 # [runtime binaries]
 echo "[34m\nCHAPTER 3: Runtime Binaries[0m"
-audit_the_following "xdotool" "i3lock" "upower" "loginctl" "ffmpeg" "magick" "mpv" "rofi" "xterm" "zsh" "xsel" "curl" "ip" "killall" "pgrep" "notify-send" "wall"
+audit_the_following "xdotool" "i3lock" "upower" "loginctl" "ffmpeg" "convert" "magick" "mpv" "rofi" "xterm" "zsh" "xsel" "curl" "ip" "killall" "pgrep" "notify-send" "wall"
 
 # [python]
 echo "[34m\nCHAPTER 4: Python Script Dependencies[0m"
