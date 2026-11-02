@@ -1,7 +1,5 @@
 # Faux Desktop Emulation
 
-A cwm + X11 session — one screen, one config, twenty years of hardware.
-
 ## Contents
 
 - [What this is](#what-this-is)
