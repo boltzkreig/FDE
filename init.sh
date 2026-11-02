@@ -1,6 +1,9 @@
 #!/bin/sh
 # set -e
 
+if [ -e FDE.sh.bak ]; then cp FDE.sh.bak FDE.sh; fi
+sed -i.bak "s|PLACEHOLDER|$(pwd)|g" FDE.sh
+
 echo "This script only check which scripts are installed. It will show the binary or version is properly installed."
 echo "Then it will install python dependencies [CHAPTER 4], build the C code [CHAPTER 2] & download assets [CHAPTER 6]"
 read -p "Press 'Enter' to continue..." reply

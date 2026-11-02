@@ -1,6 +1,6 @@
 #!/usr/bin/sh
 
-export FDE="$HOME/Projects/FDE"
+export FDE="PLACEHOLDER"
 export BUILDS="$FDE/builds"
 export XINITRC="$FDE/xinitrc"
 export ASSETS="$FDE/Assets"
